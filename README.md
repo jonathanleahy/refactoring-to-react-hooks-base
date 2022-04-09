@@ -1,3 +1,11 @@
+# Notes
+
+This code is based on the exercise tutorials from Mannings course "Refactoring to React Hooks"
+
+New Components are labelled with a prefix of Hooks
+
+
+
 # Refactoring to React Hooks - liveProject
 > Base repo
 
