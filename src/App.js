@@ -8,8 +8,8 @@ import {sales, subscriptions} from "./mocks";
 createServer({
     routes() {
         this.namespace = 'api'
-        this.get("/sales", () => sales)
-        this.get("/subscriptions", () => subscriptions)
+        this.get("/sales", () => sales,   { timing: 300 })
+        this.get("/subscriptions", () => subscriptions,  { timing: 300 })
     },
 })
 

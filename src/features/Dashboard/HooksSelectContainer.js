@@ -1,21 +1,17 @@
-import React, {useEffect, useState} from "react";
+import React, {useState} from "react";
 import HooksSelect from "../../common/components/HooksSelect";
 import HooksDisplay from "../../common/components/HooksDisplay";
+import {useFetchData} from "../../hooks/useFetchData";
 
 const HooksSelectContainer = () => {
 
-    const [data, setData] = useState([]);
-    const [url, setUrl] = useState('');
+    const [url, setUrl] = useState(``);
+
+    const {isLoading, isError, data} = useFetchData(url);
 
     const optionsForSelect = [{label: "Sales", value: `${process.env.REACT_APP_BASE_URL}/sales/`}, {
         label: "Subscriptions", value: `${process.env.REACT_APP_BASE_URL}/subscriptions/`
     }];
-
-    useEffect( () => {
-        fetch(`${url}`)
-            .then(response => response.json())
-            .then(data => setData(data));
-    }, [url])
 
     const handleChange = event => {
         setUrl(event.target.value)
@@ -23,7 +19,13 @@ const HooksSelectContainer = () => {
 
     return (<>
         <HooksSelect optionsForSelect={optionsForSelect} onSelect={handleChange}/>
-        <HooksDisplay data={data}/>
+        <br/>
+
+        {isLoading ? "Loading" : ""}
+        {isError ? "Errors:-(" : ""}
+
+        {data &&
+        <HooksDisplay data={data}/>}
     </>);
 
 }
