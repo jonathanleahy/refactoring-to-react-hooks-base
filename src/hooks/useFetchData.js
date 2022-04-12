@@ -1,33 +1,44 @@
-import {useEffect, useState} from "react";
+import {useEffect, useReducer} from "react";
+
+const initialState = { isLoading: false, isError: false, data: [] };
+
+const reducer = (state, action) => {
+    switch(action.type) {
+        case "start":
+            return {...state, isLoading: true, isError: false, data: []}
+        case "success":
+            return {...state, isLoading: false, isError: false, data: action.payload}
+        case "failure":
+            return {...state, isLoading: false, isError: true, data: []}
+        default:
+            return {...state}
+    }
+}
 
 export const useFetchData = (url) => {
 
-    const [isError, setIsError] = useState(false)
-    const [isLoading, setIsLoading] = useState(false)
-    const [data, setData] = useState([])
+    const [state, dispatch] = useReducer(reducer, initialState);
 
     useEffect(() => {
-        setIsLoading(true)
-        setIsError(false)
+        dispatch({type: "start"})
 
         const fetchData = async () => {
             try {
                 if (url !== "") {
                     const resp = await fetch(url)
                     const dataFromResp = await resp?.json();
-                    setData(dataFromResp)
+                    dispatch({type: "success", payload: dataFromResp})
                 } else {
-                    setData([])
+                    dispatch({type: "success", payload: []})
                 }
             } catch (error) {
-                setIsError(true)
+                dispatch({type: "failure", payload: []})
             }
-            setIsLoading(false)
         }
 
         fetchData()
 
     }, [url])
 
-    return {isLoading, isError, data}
+    return state
 }
